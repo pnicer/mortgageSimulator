@@ -7,3 +7,4 @@ class Config:
         self.wibor = data['wibor']
         self.interest_rate = data['interestRate']
         self.monthly_rate_inc = data['monthlyIncreasedRate']
+        self.additional_payments = data['additionalPayments']

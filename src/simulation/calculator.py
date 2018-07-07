@@ -16,13 +16,14 @@ class Rate:
 
 
 class Calculator(abc.ABC):
-    def __init__(self, mortgage_value, period, interest_rate, wibor, monthly_rate_inc):
+    def __init__(self, mortgage_value, period, interest_rate, wibor, monthly_rate_inc, additional_payments):
         self.mortgage_value = mortgage_value
         self.period = period
         self.interest_rate = interest_rate
         self.wibor = wibor
         self.monthly_rate_inc = monthly_rate_inc
         self.total_interests = (self.interest_rate + self.wibor) / 100
+        self.additional_payments = additional_payments
 
     @abc.abstractmethod
     def calc_rates(self):
@@ -39,11 +40,15 @@ class Constant(Calculator):
         mortgage_paid = False
 
         for i in range(0, self.period):
-            month_interests = (self.mortgage_value - loan_paid) * interests_per_month
-            month_loan_paid = value - month_interests + self.monthly_rate_inc
+            monthly_rate_inc = self.monthly_rate_inc
 
+            if str(i) in self.additional_payments:
+                monthly_rate_inc += self.additional_payments[str(i)]
+
+            month_interests = (self.mortgage_value - loan_paid) * interests_per_month
+            month_loan_paid = value - month_interests + monthly_rate_inc
+            rate_value = value + monthly_rate_inc
             loan_paid += month_loan_paid
-            rate_value = value + self.monthly_rate_inc
             left = round(self.mortgage_value - loan_paid, 2)
 
             if loan_paid >= self.mortgage_value:
@@ -53,7 +58,7 @@ class Constant(Calculator):
                 mortgage_paid = True
                 left = 0
 
-            rates.append(Rate(i + 1, rate_value, month_interests, month_loan_paid, self.monthly_rate_inc, left))
+            rates.append(Rate(i + 1, rate_value, month_interests, month_loan_paid, monthly_rate_inc, left))
 
             if mortgage_paid:
                 break

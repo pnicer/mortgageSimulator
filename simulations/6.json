@@ -2,9 +2,11 @@
   "type": "constant",
   "period": 360,
   "requiredFunds": 560000,
-  "startingFunds": 56000,
+  "startingFunds": 100000,
   "wibor": 1.7,
   "interestRate": 1.45,
   "monthlyIncreasedRate": 0,
-  "additionalPayments": {}
+  "additionalPayments": {
+    "120": 348994
+  }
 }

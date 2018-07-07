@@ -7,6 +7,7 @@ class SimulatorResultsDiff:
         self.value = sim_two.interests_value - sim_one.interests_value
         self.period = sim_two.config.period - sim_one.config.period
         self.rates_num = len(sim_two.rates) - len(sim_one.rates)
+        self.rate_value = sim_two.rates[0].value - sim_one.rates[0].value
 
     def print(self):
         print('---- Diff -----')
@@ -14,6 +15,7 @@ class SimulatorResultsDiff:
         print(f'Cost: {self.value}')
         print(f'Period: {self.period}')
         print(f'Rates number: {self.rates_num}')
+        print(f'Rate diff: {self.rate_value}')
 
 
 class SimulatorResults:
@@ -40,6 +42,7 @@ class SimulatorResults:
         print(f'Monthly increased rates: {self.config.monthly_rate_inc}')
         print(f'Interests value: {self.interests_value}')
         print(f'Total cost: {self.total_value}')
+        print(f'First rate: {self.rates[0].value}')
 
 
 class Simulator:
@@ -48,9 +51,11 @@ class Simulator:
         self.mortgage_value = config.required_funds - config.starting_funds
 
         if self.config.type == 'constant':
-            self.calculator = Constant(self.mortgage_value, config.period, config.interest_rate, config.wibor, config.monthly_rate_inc)
+            self.calculator = Constant(self.mortgage_value, config.period, config.interest_rate, config.wibor,
+                                       config.monthly_rate_inc, config.additional_payments)
         else:
-            self.calculator = Constant(self.mortgage_value, config.period, config.interest_rate, config.wibor, config.monthly_rate_inc)
+            self.calculator = Constant(self.mortgage_value, config.period, config.interest_rate, config.wibor,
+                                       config.monthly_rate_inc, config.additional_payments)
 
     def simulate(self):
         rates = self.calculator.calc_rates()
